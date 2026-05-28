@@ -1,0 +1,326 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags?: string[];
+}
+
+const { title, description, pubDate, tags = [] } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('ru-RU', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(pubDate);
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="post-wrapper">
+    <div class="post-header-bg">
+      <div class="container">
+        <div class="post-meta">
+          <time datetime={pubDate.toISOString()} class="post-date">{formattedDate}</time>
+          {tags.length > 0 && (
+            <div class="post-tags">
+              {tags.map(tag => <span class="tag">{tag}</span>)}
+            </div>
+          )}
+        </div>
+        <h1 class="post-title">{title}</h1>
+        <p class="post-description">{description}</p>
+      </div>
+    </div>
+
+    <div class="container post-content-container">
+      <div class="post-content">
+        <slot />
+      </div>
+
+      <aside class="post-sidebar">
+        <div class="cta-block">
+          <p class="cta-label">Бесплатно</p>
+          <h3 class="cta-title">Аудит вашего бизнеса</h3>
+          <p class="cta-desc">Найдём 3 точки роста за 45 минут. Без обязательств — только конкретные цифры.</p>
+          <a href="https://aipepden.store/audit-free/" class="cta-btn">
+            Получить аудит
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="post-cta-bottom">
+      <div class="container">
+        <div class="cta-wide">
+          <div class="cta-wide-text">
+            <h2>Готовы внедрить AI-сотрудника?</h2>
+            <p>Оставьте заявку — разберём вашу ситуацию и предложим оптимальный тариф. Первая консультация бесплатно.</p>
+          </div>
+          <a href="https://aipepden.store/audit-free/" class="cta-btn-large">
+            Бесплатный аудит
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-wrapper {
+    flex: 1;
+  }
+
+  .post-header-bg {
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 0 2.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-family: var(--font-mono);
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 1rem;
+    max-width: 800px;
+  }
+
+  .post-description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  .post-content-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .post-content-container {
+      grid-template-columns: 1fr;
+    }
+
+    .post-sidebar {
+      order: -1;
+    }
+  }
+
+  .post-content {
+    color: var(--text);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    max-width: 720px;
+  }
+
+  .post-content :global(h2) {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 2.5rem 0 1rem;
+    line-height: 1.3;
+  }
+
+  .post-content :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 2rem 0 0.75rem;
+  }
+
+  .post-content :global(p) {
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 1rem 0 1.5rem 1.5rem;
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .post-content :global(strong) {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .post-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--bg-3);
+    border-radius: 0 8px 8px 0;
+    color: var(--text-muted);
+  }
+
+  .post-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* Sidebar CTA */
+  .post-sidebar {
+    position: sticky;
+    top: 5rem;
+  }
+
+  .cta-block {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+  }
+
+  .cta-label {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-desc {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .cta-btn {
+    display: block;
+    background: var(--accent);
+    color: var(--bg);
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn:hover {
+    opacity: 0.9;
+    text-decoration: none;
+  }
+
+  /* Bottom CTA */
+  .post-cta-bottom {
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+    padding: 3rem 0;
+  }
+
+  .cta-wide {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    background: var(--bg-3);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    padding: 2.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .cta-wide {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .cta-wide-text h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-wide-text p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .cta-btn-large {
+    flex-shrink: 0;
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn-large:hover {
+    opacity: 0.9;
+    text-decoration: none;
+  }
+</style>
